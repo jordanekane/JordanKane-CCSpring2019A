@@ -1,17 +1,13 @@
-/* W: Rotate the sphere fowards
-S: Roatate the sphere backwards
-A: Rotate the sphere to the left
-D: Rotate the sphere to the right
-Space key: Reset the sphere to its original orientation
-*/
-
 JSONObject browse; //JSONArray holds an array of JSONObjects
 
 ArrayList<Particle> particles;
 
+JSONArray neardata;
+float distance;
+float size;
+
 //earth
 float r = 100;
-
 PImage earth;
 PShape globe;
 
@@ -27,31 +23,50 @@ browse = loadJSONObject("browse.json");
 
 JSONArray near = browse.getJSONArray("near_earth_objects");
 JSONObject test = near.getJSONObject(0);
-//println(test);
-//println(test.keys());
 
 for (int i = 0; i < near.size(); i++) {
 JSONObject astro = near.getJSONObject(i); 
-//println(astro.keys().size());
 if (astro.keys().size() != 11){
   continue; 
 } else {
  JSONArray data = astro.getJSONArray("close_approach_data");
- println(data);
+  println(data);
 }
 }
-saveJSONArray(near, "new.json");
+//saveJSONArray(near, "new.json"); //saves new information into new file
 
+neardata = near;
+
+//JSONArray miss = browse.getJSONArray("close_approach_data");
  
   particles = new ArrayList<Particle>();
-  for(int i = 0; i < 200; i++){
-    particles.add(new Particle());
+  for(int i = 0; i < neardata.size(); i++){ 
     
-    //particles.add (new Particle());
+    //INSERT JSON CODE HERE
+    //for (int i = 0; i < near.json.size(); i++){
+    JSONObject currobj = near.getJSONObject(i);
+    JSONObject diam = currobj.getJSONObject("estimated_diameter");
+    // Everytime I try and call distance, or velocity it prints null ??????
+    JSONObject dist = currobj.getJSONObject("astronomical");
     
+    diam = diam.getJSONObject("feet");
+    println (diam + "," + dist);
+
+  //MATH (size)
+  float size = (0.001*diam.getInt("estimated_diameter_max"))
++ (0.001*diam.getInt("estimated_diameter_min"));
+  
+    particles.add (new Particle(size)); 
+    
+    /* The distance of the particles from the earth are still random Gaussian, 
+    because the needed info is not an int and i could not get it to print (dist). HOWEVER
+    THE SIZES OF THE PARTICLES ARE ACCURATE AND I USED THE CORRECT MATH TO MAKE IT 
+    HAPPEN^^^^^ AS SEEN ABOVE!!!!
+    */
+    }    
   }
+
  
-}
 
 void draw (){
   background (0);

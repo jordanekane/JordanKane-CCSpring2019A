@@ -8,6 +8,7 @@ class Particle {
   float size;
   
   Particle(){
+    //These imputs are used when visualization is random
     xRadius = 200 + randomGaussian() * 40; //spread
     zRadius = 100 + randomGaussian() * 20; //spread
     angle = random(TWO_PI);
@@ -18,15 +19,16 @@ class Particle {
     size = map(pow(random(1), 7), 0, 1, 1, 5); //accurate size to data 
   }
   
-  Particle(float x, float z){
-    xRadius = x;
-    zRadius = z;
+  //Used when applying JSON data visualization
+  Particle(float size){
+    xRadius = 200 + randomGaussian() * 40; //spread
+    zRadius = 100 + randomGaussian() * 20;
     angle = random(TWO_PI);
     angleSpeed = random(PI / 500, PI / 250);
     tiltAngle = randomGaussian() * PI / 32;
     rotXSpeed = random(-PI / 32, PI / 32);
     rotYSpeed = random(-PI / 32, PI / 32);
-    size = map(pow(random(1), 7), 0, 1, 1, 5); //accurate size to data
+    this.size = size;
   }
   
   void display(){
@@ -39,6 +41,7 @@ class Particle {
     popMatrix();
   }
   
+  //Allows particles to rotate around earth
   void update(){
    angle -= angleSpeed;
     if(angle < 0){
